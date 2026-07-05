@@ -110,14 +110,7 @@ python solve.py
 
 The code uses only Python's standard library.
 
-## Originality And Citation Note
-
-The implementation in `solve.py` was written specifically for this assignment. I used standard ideas from coordinate geometry, rotation matrices, logarithmic transformation, and basic numerical search. The references below are included for the mathematical ideas used in the approach, not for copied code.
-
 ## References
 
-- Flam. (2026). `Assignment for Research and Development / AI` [Assignment PDF].
-- Strang, G. (2016). `Introduction to Linear Algebra` (5th ed.). Wellesley-Cambridge Press. Used for the rotation matrix and coordinate transformation idea.
-- Nocedal, J., & Wright, S. J. (2006). `Numerical Optimization` (2nd ed.). Springer. Used as a reference for numerical parameter search and residual minimization.
-- Weisstein, E. W. (n.d.). `Rotation Matrix`. MathWorld--A Wolfram Web Resource. https://mathworld.wolfram.com/RotationMatrix.html
-- Desmos. (2026). `Submitted curve implementation`. https://www.desmos.com/notebook/8aau0yt7tv/view
+- Desmos. (n.d.). `Graphing Calculator`. Used to understand and implement the parametric curve visualization. https://www.desmos.com/calculator
+- Weisstein, E. W. (n.d.). `Rotation Matrix`. MathWorld--A Wolfram Web Resource. Used for the coordinate rotation idea applied while solving the curve. https://mathworld.wolfram.com/RotationMatrix.html
