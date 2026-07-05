@@ -1,87 +1,90 @@
 # Flam AI R&D Assignment
 
-This is my submission for the Flam Research and Development / AI assignment. The goal is to estimate the three unknown parameters `theta`, `M`, and `X` from the points provided in `xy_data.csv`.
+This repository contains my submission for the Flam Research and Development / AI assignment. The task was to find the unknown parameters `theta`, `M`, and `X` in the given parametric curve using the point data from `xy_data.csv`.
 
-I have kept the solution reproducible: the final values are shown below, and `solve.py` contains the complete code used to estimate them.
+The final answer is supported by both a mathematical explanation and a reproducible Python script.
 
-## Final Answer
+## Final Result
 
-The fitted values round cleanly to:
+The estimated parameters are:
 
 ```text
-theta = 30 deg
-theta = 0.523598775598 rad
+theta = 30 degrees
+theta = 0.523598775598 radians
 M = 0.03
 X = 55
 ```
 
-The equation to paste in Desmos is:
+My Desmos implementation is available here:
+
+https://www.desmos.com/notebook/8aau0yt7tv/view
+
+## Desmos Equation
+
+The curve used for the final Desmos plot is:
 
 ```latex
 \left( t\cos(0.523598775598)-e^{0.03\left|t\right|}\sin(0.3t)\sin(0.523598775598)+55,\ 42+t\sin(0.523598775598)+e^{0.03\left|t\right|}\sin(0.3t)\cos(0.523598775598) \right)
 ```
 
-Use the range:
+with the parameter range:
 
 ```text
 6 < t < 60
 ```
 
-## Repository Contents
+## Files Included
 
 ```text
-AI_R&D Assignment.pdf  Original assignment statement
-xy_data.csv            Points provided with the assignment
-solve.py               Python script used for parameter estimation
-README.md              Explanation, result, and references
+AI_R&D Assignment.pdf  Original assignment file
+xy_data.csv            Data points provided for the curve
+solve.py               Code used to estimate the unknown parameters
+README.md              Final result, method, and references
 ```
 
-## How I Approached It
+## Method Used
 
-The original equations were:
+The assignment gives the curve:
 
 ```text
 x = t cos(theta) - exp(M |t|) sin(0.3t) sin(theta) + X
 y = 42 + t sin(theta) + exp(M |t|) sin(0.3t) cos(theta)
 ```
 
-At first, this looks like a general nonlinear curve-fitting problem. The useful observation is that the curve is made from two simpler components:
+I treated this as a rotated and translated parametric curve. The term involving `t` gives the main direction of the curve, while the term `exp(M |t|) sin(0.3t)` gives the oscillation around that direction.
 
-- a straight movement along the parameter `t`
-- an oscillating part, `exp(M |t|) sin(0.3t)`, perpendicular to that movement
-
-Because of this structure, I used a coordinate transformation. If I subtract the translation `(X, 42)` and rotate the points back by `theta`, the equations become much easier to compare:
+To simplify the fitting, I reversed the translation and rotation. For a candidate value of `theta` and `X`, I transformed each point as:
 
 ```text
 u = (x - X) cos(theta) + (y - 42) sin(theta)
 v = -(x - X) sin(theta) + (y - 42) cos(theta)
 ```
 
-For the correct values, these should behave like:
+For the correct parameters, the transformed coordinates should satisfy:
 
 ```text
 u = t
 v = exp(M |t|) sin(0.3t)
 ```
 
-So the main task is to find the `theta` and `X` that make the transformed points line up with the expected wave. Once that is done, `M` can be estimated from the exponential term.
+This reduced the problem from fitting the full two-dimensional curve directly to checking how well the transformed points match the expected one-dimensional wave.
 
-## Steps Followed
+## Estimation Steps
 
-1. Loaded all points from `xy_data.csv`.
-2. Swept `theta` in the allowed range `0 deg < theta < 50 deg`.
-3. For each `theta`, estimated `X` by projecting the points along the main curve direction.
-4. Rotated the points back into `(u, v)` coordinates.
-5. Estimated `M` from the relation:
+1. Read all `(x, y)` values from `xy_data.csv`.
+2. Search through the allowed range of `theta`.
+3. Estimate `X` from the projection of the points along the main curve direction.
+4. Rotate the points back into `(u, v)` coordinates.
+5. Estimate `M` using the logarithmic form:
 
 ```text
 log(v / sin(0.3u)) = M |u|
 ```
 
-6. Refined `theta` and `X` locally to reduce the mean L1 residual.
-7. Rounded the fitted values to the clean final values.
+6. Refine `theta` and `X` locally by minimizing the mean L1 residual.
+7. Round the fitted values to the clean final constants.
 
-The fitted output from the script is:
+The script gives:
 
 ```text
 theta_rad = 0.523598295938
@@ -91,17 +94,13 @@ X = 54.999997739089
 mean_L1_residual = 2.622198581421e-06
 ```
 
-These values round naturally to:
+These values round to:
 
 ```text
-theta = 30 deg
+theta = 30 degrees
 M = 0.03
 X = 55
 ```
-
-## Originality Note
-
-The code in this repository is my own implementation for this assignment. I used standard mathematical identities for rotation and Python's standard library for reading CSV data and computing trigonometric/exponential functions. No external optimization package was used.
 
 ## How To Run
 
@@ -109,11 +108,16 @@ The code in this repository is my own implementation for this assignment. I used
 python solve.py
 ```
 
-The script uses only Python's standard library, so no extra packages are needed.
+The code uses only Python's standard library.
+
+## Originality And Citation Note
+
+The implementation in `solve.py` was written specifically for this assignment. I used standard ideas from coordinate geometry, rotation matrices, logarithmic transformation, and basic numerical search. The references below are included for the mathematical ideas used in the approach, not for copied code.
 
 ## References
 
 - Flam. (2026). `Assignment for Research and Development / AI` [Assignment PDF].
-- Desmos. (n.d.). `Graphing calculator`. https://www.desmos.com/calculator/rfj91yrxob
-- Python Software Foundation. (2026). `csv - CSV File Reading and Writing`. Python 3.14.6 documentation. https://docs.python.org/3/library/csv.html
-- Python Software Foundation. (2026). `math - Mathematical functions`. Python 3.14.6 documentation. https://docs.python.org/3/library/math.html
+- Strang, G. (2016). `Introduction to Linear Algebra` (5th ed.). Wellesley-Cambridge Press. Used for the rotation matrix and coordinate transformation idea.
+- Nocedal, J., & Wright, S. J. (2006). `Numerical Optimization` (2nd ed.). Springer. Used as a reference for numerical parameter search and residual minimization.
+- Weisstein, E. W. (n.d.). `Rotation Matrix`. MathWorld--A Wolfram Web Resource. https://mathworld.wolfram.com/RotationMatrix.html
+- Desmos. (2026). `Submitted curve implementation`. https://www.desmos.com/notebook/8aau0yt7tv/view
