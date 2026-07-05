@@ -113,4 +113,3 @@ The code uses only Python's standard library.
 ## References
 
 - Desmos. (n.d.). `Graphing Calculator`. Used to understand and implement the parametric curve visualization. https://www.desmos.com/calculator
-- Weisstein, E. W. (n.d.). `Rotation Matrix`. MathWorld--A Wolfram Web Resource. Used for the coordinate rotation idea applied while solving the curve. https://mathworld.wolfram.com/RotationMatrix.html
