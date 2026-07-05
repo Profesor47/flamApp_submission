@@ -42,59 +42,52 @@ solve.py               Code used to estimate the unknown parameters
 README.md              Final result, method, and references
 ```
 
-## Method Used
+## Solving Steps
 
-The assignment gives the curve:
+1. I started from the given parametric equations:
 
 ```text
-x = t cos(theta) - exp(M |t|) sin(0.3t) sin(theta) + X
-y = 42 + t sin(theta) + exp(M |t|) sin(0.3t) cos(theta)
+x = t cos(theta) - e^(M|t|) sin(0.3t) sin(theta) + X
+y = 42 + t sin(theta) + e^(M|t|) sin(0.3t) cos(theta)
 ```
 
-I treated this as a rotated and translated parametric curve. The term involving `t` gives the main direction of the curve, while the term `exp(M |t|) sin(0.3t)` gives the oscillation around that direction.
+2. I observed that the curve is a translated and rotated form of a simpler curve. The main movement is along `t`, and the oscillation is given by:
 
-To simplify the fitting, I reversed the translation and rotation. For a candidate value of `theta` and `X`, I transformed each point as:
+   ```text
+   e^(M|t|) sin(0.3t)
+   ```
 
-```text
-u = (x - X) cos(theta) + (y - 42) sin(theta)
-v = -(x - X) sin(theta) + (y - 42) cos(theta)
-```
+3. To simplify the problem, I reversed the translation and rotation. For each point `(x, y)`, I transformed it into:
 
-For the correct parameters, the transformed coordinates should satisfy:
+   ```text
+   u = (x - X) cos(theta) + (y - 42) sin(theta)
+   v = -(x - X) sin(theta) + (y - 42) cos(theta)
+   ```
 
-```text
-u = t
-v = exp(M |t|) sin(0.3t)
-```
+4. For the correct values of `theta`, `M`, and `X`, the transformed points should satisfy:
 
-This reduced the problem from fitting the full two-dimensional curve directly to checking how well the transformed points match the expected one-dimensional wave.
+   ```text
+   u = t
+   v = e^(M|t|) sin(0.3t)
+   ```
 
-## Estimation Steps
+5. I searched over the allowed range of `theta`, estimated `X` from the projected points, and then fitted `M` using:
 
-1. Read all `(x, y)` values from `xy_data.csv`.
-2. Search through the allowed range of `theta`.
-3. Estimate `X` from the projection of the points along the main curve direction.
-4. Rotate the points back into `(u, v)` coordinates.
-5. Estimate `M` using the logarithmic form:
+   ```text
+   log(v / sin(0.3u)) = M |u|
+   ```
 
-```text
-log(v / sin(0.3u)) = M |u|
-```
+6. Finally, I refined the values by minimizing the mean L1 distance between the transformed points and the expected curve.
 
-6. Refine `theta` and `X` locally by minimizing the mean L1 residual.
-7. Round the fitted values to the clean final constants.
-
-The script gives:
+The fitted values were:
 
 ```text
-theta_rad = 0.523598295938
-theta_deg = 29.999972517490
+theta = 29.999972517490 degrees
 M = 0.029999990748
 X = 54.999997739089
-mean_L1_residual = 2.622198581421e-06
 ```
 
-These values round to:
+So the final rounded answer is:
 
 ```text
 theta = 30 degrees
