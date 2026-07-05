@@ -36,11 +36,13 @@ with the parameter range:
 ## Files Included
 
 ```text
-AI_R&D Assignment.pdf  Original assignment file
+assignment.pdf         Original assignment file
 xy_data.csv            Data points provided for the curve
 solve.py               Code used to estimate the unknown parameters
 README.md              Final result, method, and references
 ```
+
+Original assignment PDF: [assignment.pdf](assignment.pdf)
 
 ## Solving Steps
 
