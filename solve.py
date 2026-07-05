@@ -87,16 +87,13 @@ def score_params(points, theta, x_shift):
 
 def solve(points):
     best = None
-    # Coarse sweep over the allowed theta interval.
     for i in range(1001):
         theta = math.radians(50.0 * i / 1000)
         candidate = score_theta(points, theta)
         if best is None or candidate[0] < best[0]:
             best = candidate
 
-    # Locally refine theta and X directly. The coordinate projection gives a
-    # good start, but the first CSV point is not exactly t=6, so X should be
-    # optimized against the curve residual instead of only the t range.
+    
     _, theta, _, x_shift = best
     best = score_params(points, theta, x_shift)
     theta_step = math.radians(0.01)
