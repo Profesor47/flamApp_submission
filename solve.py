@@ -7,6 +7,7 @@ T_MAX = 60.0
 
 
 def load_points(path):
+    """Read the assignment CSV and return the measured (x, y) points."""
     with open(path, newline="") as handle:
         reader = csv.DictReader(handle)
         return [(float(row["x"]), float(row["y"])) for row in reader]
@@ -18,6 +19,7 @@ def mean(values):
 
 
 def estimate_x(points, theta):
+    """Estimate the horizontal translation for a candidate theta."""
     c = math.cos(theta)
     s = math.sin(theta)
     projected = sorted(c * x + s * (y - 42.0) for x, y in points)
@@ -27,6 +29,7 @@ def estimate_x(points, theta):
 
 
 def transformed_coordinates(points, theta, x_shift):
+    """Undo the translation and rotation so the curve becomes (t, wave)."""
     c = math.cos(theta)
     s = math.sin(theta)
     transformed = []
@@ -40,6 +43,7 @@ def transformed_coordinates(points, theta, x_shift):
 
 
 def residual_for_m(transformed, m):
+    """Mean L1 distance between observed wave values and model prediction."""
     total = 0.0
     for t, observed in transformed:
         predicted = math.exp(m * abs(t)) * math.sin(0.3 * t)
@@ -48,6 +52,7 @@ def residual_for_m(transformed, m):
 
 
 def best_m(transformed):
+    """Estimate M from log(v / sin(0.3t)) = M |t|."""
     numerator = 0.0
     denominator = 0.0
     for t, observed in transformed:

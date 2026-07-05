@@ -1,10 +1,12 @@
 # Flam AI R&D Assignment
 
-This is my submission for the Research and Development / AI assignment. The task was to find the unknown values of `theta`, `M`, and `X` in the given parametric curve using the points from `xy_data.csv`.
+This is my submission for the Flam Research and Development / AI assignment. The goal is to estimate the three unknown parameters `theta`, `M`, and `X` from the points provided in `xy_data.csv`.
+
+I have kept the solution reproducible: the final values are shown below, and `solve.py` contains the complete code used to estimate them.
 
 ## Final Answer
 
-The values I got are:
+The fitted values round cleanly to:
 
 ```text
 theta = 30 deg
@@ -25,6 +27,15 @@ Use the range:
 6 < t < 60
 ```
 
+## Repository Contents
+
+```text
+AI_R&D Assignment.pdf  Original assignment statement
+xy_data.csv            Points provided with the assignment
+solve.py               Python script used for parameter estimation
+README.md              Explanation, result, and references
+```
+
 ## How I Approached It
 
 The original equations were:
@@ -34,12 +45,12 @@ x = t cos(theta) - exp(M |t|) sin(0.3t) sin(theta) + X
 y = 42 + t sin(theta) + exp(M |t|) sin(0.3t) cos(theta)
 ```
 
-At first, this looks like a general nonlinear fitting problem. The useful observation is that the curve is basically made from two parts:
+At first, this looks like a general nonlinear curve-fitting problem. The useful observation is that the curve is made from two simpler components:
 
-- a straight movement along `t`
-- a wave term `exp(M |t|) sin(0.3t)` that is rotated by `theta`
+- a straight movement along the parameter `t`
+- an oscillating part, `exp(M |t|) sin(0.3t)`, perpendicular to that movement
 
-So I tried undoing the translation and rotation. If I subtract `(X, 42)` and rotate the points back by `theta`, the equations become much simpler:
+Because of this structure, I used a coordinate transformation. If I subtract the translation `(X, 42)` and rotate the points back by `theta`, the equations become much easier to compare:
 
 ```text
 u = (x - X) cos(theta) + (y - 42) sin(theta)
@@ -53,7 +64,7 @@ u = t
 v = exp(M |t|) sin(0.3t)
 ```
 
-That means the problem can be reduced to checking which `theta` and `X` make the rotated points line up with the expected wave.
+So the main task is to find the `theta` and `X` that make the transformed points line up with the expected wave. Once that is done, `M` can be estimated from the exponential term.
 
 ## Steps Followed
 
@@ -88,6 +99,10 @@ M = 0.03
 X = 55
 ```
 
+## Originality Note
+
+The code in this repository is my own implementation for this assignment. I used standard mathematical identities for rotation and Python's standard library for reading CSV data and computing trigonometric/exponential functions. No external optimization package was used.
+
 ## How To Run
 
 ```bash
@@ -99,4 +114,6 @@ The script uses only Python's standard library, so no extra packages are needed.
 ## References
 
 - Flam. (2026). `Assignment for Research and Development / AI` [Assignment PDF].
-- Desmos. (n.d.). Graphing calculator. https://www.desmos.com/calculator/rfj91yrxob
+- Desmos. (n.d.). `Graphing calculator`. https://www.desmos.com/calculator/rfj91yrxob
+- Python Software Foundation. (2026). `csv - CSV File Reading and Writing`. Python 3.14.6 documentation. https://docs.python.org/3/library/csv.html
+- Python Software Foundation. (2026). `math - Mathematical functions`. Python 3.14.6 documentation. https://docs.python.org/3/library/math.html
